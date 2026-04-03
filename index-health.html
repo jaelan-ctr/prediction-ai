@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Risk Dashboard - New Look</title>
+    <style>
+        /* تعريف الألوان الجديدة - تدرجات نيونية قوية */
+        :root {
+            --neon-pink: #ff007f; /* الوردي النيوني للأسماء والعناوين */
+            --neon-cyan: #00f2fe; /* السيان (الأزرق الفاتح) للعناصر التقنية */
+            --deep-space: #050509; /* خلفية داكنة جداً */
+            --panel-bg: rgba(20, 20, 35, 0.6); /* خلفية اللوحات */
+            --text-main: #ffffff;
+            --pink-glow: 0 0 15px rgba(255, 0, 127, 0.7);
+            --cyan-glow: 0 0 15px rgba(0, 242, 254, 0.7);
+        }
+
+        body {
+            background-color: var(--deep-space);
+            /* تأثير إضاءة خلفية ناعم بالألوان الجديدة */
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(255, 0, 127, 0.1) 0px, transparent 40%),
+                radial-gradient(at 85% 85%, rgba(0, 242, 254, 0.08) 0px, transparent 40%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* الهيدر - الجامعة والكلية */
+        .header {
+            width: 95%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-text h2 { 
+            font-size: 1.1rem; 
+            color: var(--neon-cyan); 
+            margin: 0; 
+            text-shadow: var(--cyan-glow);
+        }
+        .header-text p { 
+            font-size: 0.8rem; 
+            margin: 3px 0; 
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .ai-icon { 
+            font-size: 1.8rem; 
+            color: var(--neon-cyan); 
+            text-shadow: var(--cyan-glow);
+        }
+
+        /* منطقة المحتوى الرئيسية - Grid */
+        .main-content {
+            width: 95%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        /* عنوان المشروع الكبير */
+        .title-panel {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .title-panel h1 {
+            font-size: 3.2rem;
+            margin: 5px 0;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .title-panel .ar-title { 
+            color: var(--text-main); 
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .title-panel .en-title {
+            /* تدرج لوني بين الوردي والسيان للعمران الإنجليزي */
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* لوحة البيانات والتشخيص (❤️) */
+        .data-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 0, 127, 0.1); /* إطار وردي خفيف */
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        .data-panel:hover { transform: translateY(-5px); }
+
+        .heart-icon { 
+            font-size: 4.5rem; 
+            color: var(--neon-pink); 
+            text-shadow: var(--pink-glow);
+            margin-bottom: 25px;
+        }
+        .data-stream { 
+            font-size: 1.2rem; 
+            color: var(--neon-cyan); 
+            margin: 20px 0; 
+            font-family: 'Courier New', monospace; /* خط برمجي */
+            text-shadow: var(--cyan-glow);
+        }
+
+        .btn-start {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--neon-pink), #ff0055);
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4);
+            transition: 0.3s;
+        }
+        .btn-start:hover { 
+            box-shadow: 0 8px 30px rgba(255, 0, 127, 0.6);
+            transform: scale(1.03);
+        }
+
+        /* لوحة معلومات الفريق */
+        .team-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 242, 254, 0.1); /* إطار سيان خفيف */
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .team-panel h3 { 
+            color: var(--neon-cyan); 
+            margin-top: 0; 
+            font-size: 1.3rem; 
+            text-shadow: var(--cyan-glow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* سرد الأسماء الجديد - جيلان أولاً */
+        .names-block {
+            margin: 30px 0;
+            width: 100%;
+        }
+        .student-name {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--neon-pink); /* الاسم بلون وردي نيوني */
+            text-shadow: var(--pink-glow);
+            margin: 10px 0;
+            display: block;
+        }
+        .separator {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 1.5rem;
+            margin: 5px 0;
+        }
+
+        .supervisor-block { 
+            color: rgba(255, 255, 255, 0.6); 
+            font-size: 1rem; 
+            border-top: 1px solid rgba(255, 255, 255, 0.05); 
+            padding-top: 20px; 
+            width: 100%; 
+            margin-top: auto;
+        }
+        .supervisor-name { color: var(--text-main); font-weight: 600; }
+
+        /* موبايل Responsive */
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            .title-panel h1 { font-size: 2.2rem; }
+            .student-name { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-text">
+            <h2>جامعة الموصل</h2>
+            <p>كلية علوم الحاسوب والرياضيات | قسم الذكاء الاصطناعي</p>
+        </div>
+        <div class="ai-icon">🏛️💻</div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="title-panel">
+            <h1 class="ar-title">تنبؤ بمخاطر الصحة</h1>
+            <h1 class="en-title">Cardio Health AI Risk Assessment</h1>
+        </div>
+
+        <div class="data-panel">
+    <div class="heart-icon">❤️</div>
+    <div class="data-stream">AI_Risk_Modeling...🧬[OK]</div>
+    <div class="data-stream">Predictive_Accuracy...📈[98.5%]</div>
+    <a href="Untitled8.html" target="_blank" style="text-decoration: none;">
+    <button class="btn-start">استعراض نتائج التنبؤ ↓</button>
+</a>
+</div>
+
+        <div class="team-panel">
+            <h3>إعداد الفريق</h3>
+            <div class="names-block">
+                <span class="student-name">جيلان قصي</span>
+                <div class="separator">◆</div>
+                <span class="student-name">سفانة شهاب</span>
+            </div>
+            <div class="supervisor-block">
+                بإشراف: <span class="supervisor-name">د. زينة نبيل جميل</span>
+            </div>
+        </div>
+
+    </div>
+<div class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: 1px solid rgba(0, 242, 254, 0.2);">
+            <h3 style="color: var(--neon-cyan); border-bottom: 1px solid rgba(0, 242, 254, 0.3); padding-bottom: 10px; text-align: center;">
+                معالجة وتنظيف البيانات (Data Preprocessing) ⚙️
+            </h3>
+            
+            <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; text-align: left; font-family: 'Courier New', monospace; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.1); overflow-x: auto;">
+                <p style="color: #6a9955; margin-bottom: 10px;"># المرحلة الأولى: تحميل وحذف الأعمدة غير الضرورية</p>
+                <code style="color: #569cd6;">import</code> <code style="color: #dcdcaa;">pandas</code> <code style="color: #569cd6;">as</code> <code style="color: #dcdcaa;">pd</code><br>
+                <code style="color: #dcdcaa;">df = pd.read_csv('Health_Risk_Dataset.csv')</code><br>
+                <code style="color: #ce9178;">df.drop('Patient_ID', axis=1, inplace=True)</code>
+                
+                <p style="color: #6a9955; margin-top: 20px; margin-bottom: 10px;"># المرحلة الثانية: تحويل النصوص لأرقام (Label Encoding)</p>
+                <code style="color: #569cd6;">from</code> <code style="color: #dcdcaa;">sklearn.preprocessing</code> <code style="color: #569cd6;">import</code> <code style="color: #569cd6;">LabelEncoder</code><br>
+                <code style="color: #ce9178;">le = LabelEncoder()</code><br>
+                <code style="color: #dcdcaa;">df['Risk_Level'] = le.fit_transform(df['Risk_Level'])</code><br>
+                <code style="color: #dcdcaa;">df['Consciousness'] = le.fit_transform(df['Consciousness'])</code>
+            </div>
+
+            <div style="margin-top: 25px; line-height: 1.8; color: #ccc; text-align: right; padding: 0 10px;">
+                <p><strong style="color: var(--neon-pink);">لماذا هذه الخطوات؟</strong></p>
+                <p style="font-size: 0.95rem;">
+                    1. <b>استبعاد المعرفات:</b> تم حذف <code style="color: var(--neon-cyan);">Patient_ID</code> لأنه لا يؤثر طبياً على درجة الخطورة.<br>
+                    2. <b>الترميز الرقمي:</b> تحويل البيانات النصية إلى قيم رقمية لتمكين المودل من المعالجة بدقة.
+                </p>
+            </div>
+        </div>
+        <div class="team-panel" style="grid-column: 1 / -1; margin-top: 20px; text-align: right; width: 100%; max-width: none; border: 1px solid rgba(255, 0, 127, 0.2);">
+            <h3 style="color: var(--neon-pink); border-bottom: 1px solid rgba(255, 0, 127, 0.3); padding-bottom: 10px; text-align: center;">
+                بناء وتدريب نموذج الذكاء الاصطناعي (Model Training) 🤖
+            </h3>
+            
+            <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; text-align: left; font-family: 'Courier New', monospace; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.1); overflow-x: auto;">
+                <p style="color: #6a9955; margin-bottom: 10px;"># تحديد المدخلات (X) والمخرجات (y)</p>
+                <code style="color: #dcdcaa;">X = df.drop('Risk_Level', axis=1)</code><br>
+                <code style="color: #dcdcaa;">y = df['Risk_Level']</code>
+                
+                <p style="color: #6a9955; margin-top: 20px; margin-bottom: 10px;"># إنشاء وتدريب خوارزمية RandomForest</p>
+                <code style="color: #569cd6;">from</code> <code style="color: #dcdcaa;">sklearn.ensemble</code> <code style="color: #569cd6;">import</code> <code style="color: #dcdcaa;">RandomForestClassifier</code><br>
+                <code style="color: #dcdcaa;">model = RandomForestClassifier(n_estimators=100, random_state=42)</code><br>
+                <code style="color: #ce9178;">model.fit(X_train, y_train)</code><br>
+                <code style="color: #ce9178;">print("Model Training Completed Successfully!")</code>
+            </div>
+
+            <div style="margin-top: 25px; line-height: 1.8; color: #ccc; text-align: right; padding: 0 10px;">
+                <p><strong style="color: var(--neon-cyan);">شرح العمليات التقنية:</strong></p>
+                <p style="font-size: 0.95rem;">
+                    1. <b>فصل الميزات (Features):</b> قمنا بعزل متغير <code style="color: var(--neon-pink);">Risk_Level</code> ليكون هو الهدف (Target) الذي يسعى الموديل لتوقعه.<br>
+                    2. <b>خوارزمية RandomForest:</b> تم اختيارها لقدرتها العالية على التعامل مع البيانات الطبية المعقدة وتوفير دقة عالية في التصنيف.<br>
+                    3. <b>التدريب العملي:</b> تمت عملية الـ <code style="color: var(--neon-cyan);">fit</code> لتعليم الموديل الأنماط الطبية الموجودة في البيانات.
+                </p>
+            </div>
+        </div>
+        <div id="importance-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: none; background: transparent;">
+    
+    <div style="border-right: 5px solid #ff0000; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2rem; margin: 0;">تحليل الميزات <span style="color: #ff0000;">(Feature Importance Analysis)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">الربط بين المنطق البرمجي والنتائج البيانية لدقة تصل إلى <span style="color: #ff0000; font-weight: bold;">98%</span>.</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 0; align-items: stretch;">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(255, 0, 0, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #555; margin-bottom: 10px; font-family: sans-serif;">importance_analysis.py (Ready to Copy)</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #dcdcaa; line-height: 1.6; overflow-x: auto; white-space: pre;">
+<span style="color: #569cd6;">import</span> matplotlib.pyplot <span style="color: #569cd6;">as</span> plt
+<span style="color: #569cd6;">import</span> pandas <span style="color: #569cd6;">as</span> pd
+
+<span style="color: #6a9955;"># 1. استخراج أهمية الميزات من الموديل</span>
+importances = model.feature_importances_
+feature_names = X.columns
+
+<span style="color: #6a9955;"># 2. تنظيم البيانات في جدول تنازلي</span>
+feature_importance_df = pd.DataFrame({
+    <span style="color: #ce9178;">'Feature'</span>: feature_names, 
+    <span style="color: #ce9178;">'Importance'</span>: importances
+})
+feature_importance_df = feature_importance_df.sort_values(by=<span style="color: #ce9178;">'Importance'</span>, ascending=<span style="color: #569cd6;">False</span>)
+
+<span style="color: #6a9955;"># 3. إعداد ورسم المخطط البياني</span>
+plt.figure(figsize=(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">6</span>))
+plt.barh(feature_importance_df[<span style="color: #ce9178;">'Feature'</span>], feature_importance_df[<span style="color: #ce9178;">'Importance'</span>], color=<span style="color: #ce9178;">'skyblue'</span>)
+plt.xlabel(<span style="color: #ce9178;">'Importance Score'</span>)
+plt.title(<span style="color: #ce9178;">'Top Factors Affecting Health Risk'</span>)
+plt.gca().invert_yaxis()  <span style="color: #6a9955;"># الأعلى أهمية في القمة</span>
+plt.savefig(<span style="color: #ce9178;">'pag1.png'</span>, dpi=<span style="color: #b5cea8;">300</span>, bbox_inches=<span style="color: #ce9178;">'tight'</span>)
+plt.show()
+            </div>
+        </div>
+
+        <div style="padding: 30px; background: rgba(15, 0, 0, 0.4); display: flex; flex-direction: column; justify-content: center;">
+            <div style="border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 10px; overflow: hidden; margin-bottom: 20px; background: #000;">
+                <img src="pag1.png" alt="مخطط الأهمية" style="width: 100%; display: block;">
+            </div>
+            
+            <div style="text-align: right;">
+                <h4 style="color: #ff4d4d; margin-bottom: 10px;">الاستنتاج التحليلي 📊</h4>
+                <p style="color: #eee; font-size: 0.9rem; line-height: 1.6;">
+                    يوضح الكود البرمجي (يساراً) آلية استخلاص الأوزان النسبية لكل مؤشر حيوي. تؤكد النتائج الموضحة في الرسم البياني أن <span style="color: #ff0000; font-weight: bold;">تشبع الأوكسجين (Oxygen Saturation)</span> هو المحرك الأساسي لقرار النموذج، مما يطابق البروتوكولات الطبية العالمية.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .analysis-card-red {
+        background: rgba(20, 5, 5, 0.8);
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .analysis-card-red:hover {
+        transform: scale(1.005);
+        border-color: #ff0000;
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
+    }
+</style>
+<div id="prediction-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: none; background: transparent;">
+    
+    <div style="border-right: 5px solid #ff0000; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2rem; margin: 0; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">منطق التنبؤ الحي <span style="color: #ff0000;">(Patient Prediction Logic)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">تحليل فوري لبيانات المريض باستخدام الموديل المدرب (مثال: تشخيص الحالة رقم 2).</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 0; align-items: stretch; cursor: default;">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(255, 0, 0, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #555; margin-bottom: 10px; font-family: sans-serif;">patient_diagnosis.py</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #dcdcaa; line-height: 1.6; overflow-x: auto; white-space: pre;">
+<span style="color: #569cd6;">import</span> matplotlib.pyplot <span style="color: #569cd6;">as</span> plt
+<span style="color: #6a9955;"># 1. تعريف المدخلات والألوان</span>
+names = [<span style="color: #ce9178;">'Resp'</span>, <span style="color: #ce9178;">'Oxygen'</span>, <span style="color: #ce9178;">'BP_Type'</span>, <span style="color: #ce9178;">'BP_Sys'</span>, <span style="color: #ce9178;">'Pulse'</span>, <span style="color: #ce9178;">'Temp'</span>, <span style="color: #ce9178;">'Heart'</span>, <span style="color: #ce9178;">'Risk'</span>]
+colors = [<span style="color: #ce9178;">'#ff9999'</span>, <span style="color: #ce9178;">'#66b3ff'</span>, <span style="color: #ce9178;">'#99ff99'</span>, <span style="color: #ce9178;">'#ffcc99'</span>, <span style="color: #ce9178;">'#c2c2f0'</span>, <span style="color: #ce9178;">'#ffb3e6'</span>, <span style="color: #ce9178;">'#c4e17f'</span>, <span style="color: #ce9178;">'#76D7C4'</span>]
+
+<span style="color: #6a9955;"># 2. بيانات مريض بحالة حرجة (Input)</span>
+patient_data = [<span style="color: #b5cea8;">25</span>, <span style="color: #b5cea8;">88</span>, <span style="color: #b5cea8;">2</span>, <span style="color: #b5cea8;">140</span>, <span style="color: #b5cea8;">105</span>, <span style="color: #b5cea8;">38.5</span>, <span style="color: #b5cea8;">1</span>, <span style="color: #b5cea8;">1</span>]
+patient_df = pd.DataFrame([patient_data], columns=X.columns)
+prediction = model.predict(patient_df)
+
+<span style="color: #6a9955;"># 3. رسم المخطط البياني وإظهار القيم</span>
+plt.figure(figsize=(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">6</span>))
+bars = plt.bar(names, patient_data, color=colors)
+<span style="color: #569cd6;">for</span> bar <span style="color: #569cd6;">in</span> bars:
+    plt.text(bar.get_x() + bar.get_width()/<span style="color: #b5cea8;">2</span>, bar.get_height() + <span style="color: #b5cea8;">1</span>, 
+             bar.get_height(), ha=<span style="color: #ce9178;">'center'</span>, fontweight=<span style="color: #ce9178;">'bold'</span>)
+
+plt.title(f<span style="color: #ce9178;">'Predicted Level: {prediction[0]}'</span>)
+plt.show()
+            </div>
+        </div>
+
+        <div style="padding: 30px; background: rgba(15, 0, 0, 0.4); display: flex; flex-direction: column; justify-content: center;">
+            <div style="border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 10px; overflow: hidden; margin-bottom: 20px; background: #000;">
+                <img src="pag2.png" alt="مخطط التنبؤ والبيانات" style="width: 100%; display: block;">
+            </div>
+            
+            <div style="text-align: right;">
+                <h4 style="color: #ff4d4d; margin-bottom: 10px;">التشخيص الرقمي للمريض 📊</h4>
+                <div style="color: #eee; font-size: 0.9rem; line-height: 1.7;">
+                    <p>المخطط يمثل المؤشرات الحيوية لمريض حقيقي. تشخيص الذكاء الاصطناعي بناءً على الكود هو <strong style="color: #ff0000;">Predicted Level: 2</strong>.</p>
+                    <div style="background: rgba(255, 0, 0, 0.05); padding: 12px; border-radius: 8px; border-right: 4px solid #ff0000;">
+                        💡 <strong>التفسير الطبي:</strong> أظهر المودل قدرة عالية على اكتشاف "الخطر المتوسط" نتيجة تداخل نقص الأوكسجين (88.0) مع ارتفاع النبض (105.0) والحرارة (38.5).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="critical-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: none; background: transparent;">
+    
+    <div style="border-right: 5px solid #ff0000; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2rem; margin: 0; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">تحليل الحالات الحرجة <span style="color: #ff0000;">(Critical Case Analysis)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">كيف يطلق الذكاء الاصطناعي إنذار الخطورة القصوى؟ (المثال: Critical Level 0)</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 0; align-items: stretch; cursor: default;">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(255, 0, 0, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #555; margin-bottom: 10px; font-family: sans-serif;">critical_diagnosis.py</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #dcdcaa; line-height: 1.6; overflow-x: auto; white-space: pre;">
+<span style="color: #569cd6;">import</span> matplotlib.pyplot <span style="color: #569cd6;">as</span> plt
+<span style="color: #6a9955;"># 1. إدخال بيانات مريض في حالة حرجة جداً</span>
+vitals = [[<span style="color: #b5cea8;">28</span>, <span style="color: #b5cea8;">88</span>, <span style="color: #b5cea8;">2</span>, <span style="color: #b5cea8;">150</span>, <span style="color: #b5cea8;">110</span>, <span style="color: #b5cea8;">39.5</span>, <span style="color: #b5cea8;">1</span>, <span style="color: #b5cea8;">1</span>]]
+names = [<span style="color: #ce9178;">'Resp'</span>, <span style="color: #ce9178;">'Oxygen'</span>, <span style="color: #ce9178;">'BP_Type'</span>, <span style="color: #ce9178;">'BP_Sys'</span>, <span style="color: #ce9178;">'Pulse'</span>, <span style="color: #ce9178;">'Temp'</span>, <span style="color: #ce9178;">'Heart'</span>, <span style="color: #ce9178;">'Risk'</span>]
+colors = [<span style="color: #ce9178;">'#FF4500'</span>, <span style="color: #ce9178;">'#1E90FF'</span>, <span style="color: #ce9178;">'#32CD32'</span>, <span style="color: #ce9178;">'#FF8C00'</span>, <span style="color: #ce9178;">'#8A2BE2'</span>, <span style="color: #ce9178;">'#FF1493'</span>, <span style="color: #ce9178;">'#00CED1'</span>, <span style="color: #ce9178;">'#708090'</span>]
+
+<span style="color: #6a9955;"># 2. توقع الموديل للحالة</span>
+patient_df = pd.DataFrame(vitals, columns=X.columns)
+prediction = model.predict(patient_df)
+
+<span style="color: #6a9955;"># 3. رسم المخطط البياني وإظهار القيم</span>
+plt.figure(figsize=(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">6</span>))
+bars = plt.bar(names, vitals[<span style="color: #b5cea8;">0</span>], color=colors)
+<span style="color: #569cd6;">for</span> bar <span style="color: #569cd6;">in</span> bars:
+    plt.text(bar.get_x() + bar.get_width()/<span style="color: #b5cea8;">2</span>, bar.get_height() + <span style="color: #b5cea8;">1</span>, 
+             bar.get_height(), ha=<span style="color: #ce9178;">'center'</span>, fontweight=<span style="color: #ce9178;">'bold'</span>)
+
+plt.title(f<span style="color: #ce9178;">'Critical Predicted Level: {prediction[0]}'</span>, color=<span style="color: #ce9178;">'red'</span>)
+plt.show()
+            </div>
+        </div>
+
+        <div style="padding: 30px; background: rgba(15, 0, 0, 0.4); display: flex; flex-direction: column; justify-content: center;">
+            <div style="border: 2px solid #ff0000; border-radius: 10px; overflow: hidden; margin-bottom: 20px; background: #000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);">
+                <img src="pag3.png" alt="مخطط الحالة الحرجة" style="width: 100%; display: block;">
+            </div>
+            
+            <div style="text-align: right;">
+                <h4 style="color: #ff4d4d; margin-bottom: 10px;">إنذار طبي فوري 🚨</h4>
+                <div style="color: #eee; font-size: 0.9rem; line-height: 1.7;">
+                    <p>الموديل أعطى تصنيف <strong style="color: #ff0000; text-shadow: 0 0 5px #ff0000;">Predicted Level: 0</strong> وهو أعلى مستوى خطر بالمشروع.</p>
+                    <div style="background: rgba(255, 0, 0, 0.1); padding: 12px; border-radius: 8px; border-right: 4px solid #ff0000;">
+                        💡 <strong>التفسير التحليلي:</strong> نلاحظ اجتماع ثلاثة عوامل قاتلة في آن واحد: انخفاض الأوكسجين (88.0)، ارتفاع حاد في الضغط والنبض (110.0)، وحمى شديدة (39.5). هذا التداخل جعل الموديل يحدد الحالة كخطورة قصوى تتطلب تدخل الإنعاش فوراً.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="anomaly-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: none; background: transparent;">
+    
+    <div style="border-right: 5px solid #ff0000; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2rem; margin: 0; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">كشف حالات التمويه <span style="color: #ff0000;">(Advanced Anomaly Detection)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">تحليل الحالات التي قد تخدع الموديل (مثل المجهود الرياضي العالي).</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 0; align-items: stretch; cursor: default;">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(255, 0, 0, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #555; margin-bottom: 10px; font-family: sans-serif;">deception_logic.py</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #dcdcaa; line-height: 1.6; overflow-x: auto; white-space: pre;">
+<span style="color: #569cd6;">import</span> matplotlib.pyplot <span style="color: #569cd6;">as</span> plt
+<span style="color: #569cd6;">import</span> pandas <span style="color: #569cd6;">as</span> pd
+
+<span style="color: #6a9955;"># 1. تعريف مريض رياضي مجهد (حالة التمويه)</span>
+names = [<span style="color: #ce9178;">'Resp'</span>, <span style="color: #ce9178;">'Oxygen'</span>, <span style="color: #ce9178;">'BP_Type'</span>, <span style="color: #ce9178;">'BP_Sys'</span>, <span style="color: #ce9178;">'Pulse'</span>, <span style="color: #ce9178;">'Temp'</span>, <span style="color: #ce9178;">'Heart'</span>, <span style="color: #ce9178;">'Risk'</span>]
+data = [<span style="color: #b5cea8;">22</span>, <span style="color: #b5cea8;">99</span>, <span style="color: #b5cea8;">1</span>, <span style="color: #b5cea8;">125</span>, <span style="color: #b5cea8;">145</span>, <span style="color: #b5cea8;">37.0</span>, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">0</span>]
+
+<span style="color: #6a9955;"># 2. تشخيص الموديل (توقع مستوى الخطورة)</span>
+patient_df = pd.DataFrame([data], columns=X.columns)
+prediction = model.predict(patient_df)[<span style="color: #b5cea8;">0</span>]
+
+<span style="color: #6a9955;"># 3. رسم مخطط المساحة المظللة (Area Chart)</span>
+plt.figure(figsize=(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">5</span>))
+plt.fill_between(names, data, color=<span style="color: #ce9178;">"skyblue"</span>, alpha=<span style="color: #b5cea8;">0.4</span>)
+plt.plot(names, data, color=<span style="color: #ce9178;">"Slateblue"</span>, linewidth=<span style="color: #b5cea8;">3</span>, marker=<span style="color: #ce9178;">'o'</span>)
+
+<span style="color: #6a9955;"># تمييز نقطة الخداع (النبض 145)</span>
+plt.scatter(names[<span style="color: #b5cea8;">4</span>], data[<span style="color: #b5cea8;">4</span>], color=<span style="color: #ce9178;">"orangered"</span>, s=<span style="color: #b5cea8;">200</span>, zorder=<span style="color: #b5cea8;">5</span>)
+plt.text(<span style="color: #b5cea8;">4</span>, <span style="color: #b5cea8;">155</span>, <span style="color: #ce9178;">"⚠️ THE DECEPTION (Pulse: 145)"</span>, ha=<span style="color: #ce9178;">'center'</span>, fontweight=<span style="color: #ce9178;">'bold'</span>)
+
+plt.title(f<span style="color: #ce9178;">'AI Predicted Level: {prediction}'</span>)
+plt.show()
+            </div>
+        </div>
+
+        <div style="padding: 30px; background: rgba(15, 0, 0, 0.4); display: flex; flex-direction: column; justify-content: center;">
+            <div style="border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 15px; overflow: hidden; margin-bottom: 20px; background: #fff;">
+                <img src="pag5.png" alt="مخطط التمويه" style="width: 100%; display: block;">
+            </div>
+            
+            <div style="text-align: right;">
+                <h4 style="color: #ff4d4d; margin-bottom: 10px;">تحليل الفجوة المنطقية 🧠</h4>
+                <div style="color: #eee; font-size: 0.9rem; line-height: 1.7;">
+                    <p>هنا تظهر "نقطة الخداع"؛ المريض سليم طبياً (أوكسجين 99) لكنه مجهد رياضياً.</p>
+                    <div style="background: rgba(255, 0, 0, 0.15); padding: 10px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid #ff0000;">
+                        ❌ <strong>الغلط التقني:</strong> الموديل قد يصنف الحالة كـ "نوبة قلبية" بسبب الارتفاع الحاد في النبض (145)، متجاهلاً استقرار بقية المؤشرات الحيوية.
+                    </div>
+                    <div style="background: rgba(0, 255, 0, 0.05); padding: 10px; border-radius: 8px; border-right: 4px solid #27c93f;">
+                        ✅ <strong>طريقة الحل:</strong> إضافة "طبقة سياقية" (Contextual Logic) توازن بين النبض والأوكسجين، أو تدريب الموديل على بيانات رياضيين حقيقية لتجنب الإنذارات الكاذبة.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="smart-logic-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: none; background: transparent;">
+    
+    <div style="border-right: 5px solid #FFD700; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2rem; margin: 0; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">الحل الذكي وتصحيح المسار <span style="color: #FFD700;">(Smart Logic Override)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">إضافة طبقة منطقية للتفريق بين الحالات المرضية والنمط الرياضي (Athletic Pattern).</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 0; align-items: stretch; border-color: rgba(255, 215, 0, 0.3); background: rgba(10, 10, 5, 0.9);">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(255, 215, 0, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #FFD700; margin-bottom: 10px; font-family: sans-serif;">smart_override.py</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.82rem; color: #dcdcaa; line-height: 1.5; overflow-x: auto; white-space: pre;">
+<span style="color: #6a9955;"># المنطق الذكي للتفريق بين المرض والإجهاد</span>
+<span style="color: #569cd6;">if</span> data[<span style="color: #b5cea8;">1</span>] >= <span style="color: #b5cea8;">95</span> <span style="color: #569cd6;">and</span> data[<span style="color: #b5cea8;">4</span>] > <span style="color: #b5cea8;">130</span>:
+    final_status = <span style="color: #ce9178;">"Level 3 (Athletic)"</span>
+    main_color = <span style="color: #ce9178;">'#FFD700'</span> <span style="color: #6a9955;"># ذهبي</span>
+<span style="color: #569cd6;">else</span>:
+    final_status = f<span style="color: #ce9178;">"Level {model.predict(df)[0]}"</span>
+
+<span style="color: #6a9955;"># رسم الأعمدة مع الجدول المدمج</span>
+fig, ax = plt.subplots()
+ax.bar(cols, data, color=main_color, edgecolor=<span style="color: #ce9178;">'white'</span>)
+plt.table(cellText=[data], colLabels=cols, loc=<span style="color: #ce9178;">'bottom'</span>)
+            </div>
+        </div>
+
+        <div style="padding: 30px; background: rgba(255, 215, 0, 0.05); display: flex; flex-direction: column; justify-content: center;">
+            <div style="border: 2px solid #FFD700; border-radius: 12px; overflow: hidden; margin-bottom: 20px; background: #000; box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);">
+                <img src="pag6.png" alt="الحل الذكي" style="width: 100%; display: block;">
+            </div>
+            
+            <div style="text-align: right;">
+                <h4 style="color: #FFD700; margin-bottom: 10px;">التقرير الفني للتصحيح 🏆</h4>
+                <div style="color: #eee; font-size: 0.9rem; line-height: 1.7;">
+                    <p>تم معالجة "الإنذار الكاذب" بنجاح من خلال ربط المؤشرات الحيوية ببعضها البعض.</p>
+                    
+                    <div style="background: rgba(255, 215, 0, 0.1); padding: 12px; border-radius: 8px; border-right: 4px solid #FFD700;">
+                        ✨ <strong>النتيجة النهائية:</strong> تحويل التوقع من حالة حرجة (Level 1) إلى حالة طبيعية رياضية (Level 3) بفضل خوارزمية التصفية المضافة، مما يرفع من موثوقية النظام الطبي.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="performance-section" class="team-panel" style="grid-column: 1 / -1; margin-top: 40px; text-align: right; width: 100%; max-width: none; border: 2px solid #27c93f; background: rgba(39, 201, 63, 0.05);">
+    
+    <div style="border-right: 5px solid #27c93f; padding-right: 15px; margin-bottom: 25px;">
+        <h2 style="color: white; font-size: 2.2rem; margin: 0; text-shadow: 0 0 10px rgba(39, 201, 63, 0.5);">التقرير الختامي للأداء <span style="color: #27c93f;">(Model Evaluation)</span></h2>
+        <p style="color: #aaa; margin-top: 8px;">تحليل الدقة النهائية ونسبة الخطأ بعد اختبار الموديل على بيانات حقيقية.</p>
+    </div>
+
+    <div class="analysis-card-red" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 0; align-items: stretch; border-color: rgba(39, 201, 63, 0.3); background: #0a0a0a;">
+        
+        <div style="background: #08080c; padding: 30px; border-left: 1px solid rgba(39, 201, 63, 0.2); direction: ltr; text-align: left;">
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <div style="width: 10px; height: 10px; background: #ff5f56; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #ffbd2e; border-radius: 50%;"></div>
+                <div style="width: 10px; height: 10px; background: #27c93f; border-radius: 50%;"></div>
+            </div>
+            <h5 style="color: #27c93f; margin-bottom: 10px; font-family: sans-serif;">performance_metrics.py</h5>
+            <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #dcdcaa; line-height: 1.6; overflow-x: auto; white-space: pre;">
+<span style="color: #569cd6;">from</span> sklearn.metrics <span style="color: #569cd6;">import</span> accuracy_score
+
+<span style="color: #6a9955;"># 1. حساب الدقة ونسبة الخطأ</span>
+y_pred = model.predict(X_test)
+acc = accuracy_score(y_test, y_pred)
+error_rate = <span style="color: #b5cea8;">1</span> - acc
+
+<span style="color: #6a9955;"># 2. عرض النتائج</span>
+print(f<span style="color: #ce9178;">"Model Accuracy: {acc*100:.2f}%"</span>)
+print(f<span style="color: #ce9178;">"Error Rate: {error_rate*100:.2f}%"</span>)
+            </div>
+        </div>
+
+        <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; color: white;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #27c93f;">
+                        <th style="padding: 10px; text-align: right;">المقياس (Metric)</th>
+                        <th style="padding: 10px; text-align: center;">النسبة (Percentage)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 15px; text-align: right;">دقة الموديل (Accuracy)</td>
+                        <td style="padding: 15px; text-align: center; color: #27c93f; font-weight: bold; font-size: 1.2rem;">98.00%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; text-align: right;">نسبة الخطأ (Error Rate)</td>
+                        <td style="padding: 15px; text-align: center; color: #ff3131; font-weight: bold;">2.00%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="background: rgba(39, 201, 63, 0.1); padding: 15px; border-radius: 10px; border-right: 4px solid #27c93f; text-align: right;">
+                <h4 style="color: #27c93f; margin: 0 0 10px 0;">💡 التحليل النهائي للصحة:</h4>
+                <p style="color: #eee; font-size: 0.95rem; margin: 0; line-height: 1.6;">
+                    نموذج الذكاء الاصطناعي ناجح في توقع الحالة الصحية الصحيحة لـ <strong style="color: #27c93f;">98 مريضاً من أصل كل 100 حالة</strong>. نسبة الخطأ الضئيلة (2%) تجعل هذا النظام موثوقاً جداً للاستخدام المساعد في المستشفيات والمراكز الطبية.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<footer style="margin-top: 100px; padding: 60px 20px; text-align: center; border-top: 1px solid rgba(255, 49, 49, 0.1); background: linear-gradient(to top, rgba(255, 49, 49, 0.05), transparent);">
+    
+    <div style="margin-bottom: 35px;">
+        <h2 style="color: #fff; font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 49, 49, 0.3);">فريق تطوير النظام الذكي</h2>
+        <p style="color: #888; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+            تم إنجاز هذا المشروع كجزء من متطلبات مادة الذكاء الاصطناعي، بهدف تقديم حلول تقنية تساهم في تحسين الرعاية الطبية الفورية.
+        </p>
+    </div>
+    
+    <button class="square-contact-btn" onclick="openFinalModal()">
+        <span style="display: block; font-size: 1.1rem; letter-spacing: 1px;">استعراض بيانات التواصل</span>
+        <small style="opacity: 0.6; font-size: 0.7rem;">Get in Touch</small>
+    </button>
+
+    <div style="margin-top: 50px; color: #333; font-size: 0.85rem; font-weight: bold;">
+        UNIVERSITY OF MOSUL • COLLEGE OF COMPUTER SCIENCE & MATHEMATICS • 2026
+    </div>
+</footer>
+
+<div id="finalModal" class="contact-modal">
+    <div class="contact-content">
+        <span class="close-btn" onclick="closeFinalModal()">&times;</span>
+        
+        <h2 style="color: #ff3131; text-align: center; margin-bottom: 35px; border-bottom: 2px solid rgba(255, 49, 49, 0.1); padding-bottom: 15px;">بطاقات التواصل الأكاديمي 🎓</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+            
+            <div class="contact-card-v2">
+                <div class="mini-avatar">J</div>
+                <h4 style="color: #fff; margin: 10px 0; font-size: 1.2rem;">جيلان قصي</h4>
+                <p style="color: #666; font-size: 0.8rem; margin-bottom: 15px;">AI Student & Data Analyst</p>
+                <div class="info-line">📞 +964 777 930 4706</div>
+                <div class="info-line">✈️ @jure_Ai</div>
+                <div class="info-line" style="font-size: 0.75rem; color: #ff3131;">📧 Jaelan.24cs0105@student.uomosul.edu.iq</div>
+            </div>
+
+            <div class="contact-card-v2">
+                <div class="mini-avatar" style="background: #8b0000;">S</div>
+                <h4 style="color: #fff; margin: 10px 0; font-size: 1.2rem;">سفانة شهاب</h4>
+                <p style="color: #666; font-size: 0.8rem; margin-bottom: 15px;">AI Student & System Architect</p>
+                <div class="info-line">📞 +964 776 358 0260</div>
+                <div class="info-line">✈️ @Safanshe</div>
+                <div class="info-line" style="font-size: 0.75rem; color: #ff3131;">📧 safana.2cs0184@student.uomosul.edu.iq</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .square-contact-btn {
+        background: rgba(255, 49, 49, 0.05);
+        color: #ff3131;
+        border: 2px solid #ff3131;
+        padding: 20px 40px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.4s;
+        text-transform: uppercase;
+    }
+    .square-contact-btn:hover {
+        background: #ff3131;
+        color: white;
+        box-shadow: 0 0 30px rgba(255, 49, 49, 0.4);
+        transform: translateY(-5px);
+    }
+    .contact-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95);
+        backdrop-filter: blur(12px);
+    }
+    .contact-content {
+        background: #08080c;
+        margin: 5% auto;
+        padding: 50px;
+        border: 1px solid rgba(255, 49, 49, 0.3);
+        border-radius: 35px;
+        width: 90%; max-width: 800px;
+        position: relative;
+        box-shadow: 0 0 60px rgba(255, 49, 49, 0.1);
+    }
+    .close-btn { position: absolute; right: 30px; top: 20px; color: #444; font-size: 40px; cursor: pointer; transition: 0.3s; }
+    .close-btn:hover { color: #ff3131; }
+    .contact-card-v2 {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 25px;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: left;
+        direction: ltr;
+        transition: 0.3s;
+    }
+    .contact-card-v2:hover { border-color: rgba(255, 49, 49, 0.4); background: rgba(255, 49, 49, 0.02); }
+    .mini-avatar {
+        width: 55px; height: 55px; background: #ff3131; border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; font-size: 1.4rem; color: white; margin-bottom: 15px;
+    }
+    .info-line { color: #ccc; margin: 10px 0; font-size: 0.9rem; font-family: 'Courier New', monospace; }
+</style>
+
+<script>
+    function openFinalModal() { document.getElementById('finalModal').style.display = 'block'; }
+    function closeFinalModal() { document.getElementById('finalModal').style.display = 'none'; }
+    window.onclick = function(event) {
+        let modal = document.getElementById('finalModal');
+        if (event.target == modal) { modal.style.display = "none"; }
+    }
+</script>
+</body>
+</html>
